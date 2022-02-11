@@ -31,12 +31,12 @@ class CurrencyRepository
      *                      ]
      * @throws GuzzleException
      */
-    public function getExchangeRate(string $currency)
+    public function getExchangeRate(string $from,string $to)
     {
         $client   = new Client();
         $response = $client->get('https://tw.rter.info/capi.php');
         $rateData = json_decode($response->getBody(), true);
-        $key      = "USD" . $currency;
+        $key      = $from . $to;
         return $rateData[$key] ?? [];
 
     }

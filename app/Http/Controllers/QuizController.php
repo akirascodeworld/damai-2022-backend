@@ -23,6 +23,16 @@ class QuizController extends Controller
     {
         $response = collect([]);
         // TODO: 實作取得匯率
+        $from = $request->from;
+        $to  = $request->to;
+        $rate = $this->exchangeService->getExchangeRate($from,$to);
+        $updatedDate = date('Y-m-d H:i:s');
+        if(!empty($rate)){
+            $response['exchange_rate'] = $rate['Exrate']?:'';
+            $response['updated_at'] = $rate['Exrate']?:$updatedDate;
+        } else {
+            $response['message'] = 'Not search curreny';
+        }
         // API回傳結果
         return new ExchangeResource($response);
     }
