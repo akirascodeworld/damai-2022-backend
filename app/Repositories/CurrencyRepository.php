@@ -41,20 +41,22 @@ class CurrencyRepository
     }
 
     /**
-     * 取得美元兌換該幣別匯率
+     * 取得全幣別轉換
      *
-     * @param String $currency 幣別 ex: TWD, JPY
+     * @param String $from 幣別 ex: TWD, JPY
+     * @param String $to 幣別 ex: TWD, JPY
      *
      * @return array|mixed [
      *                      "Exrate": 匯率
      *                      "UTC": 更新時間
      *                      ]
-     * @throws GuzzleException
+     * @throws Exception
      */
     public function getAllCurrencyRate(string $from,string $to)
     {
         if($from == 'USD'){
             $rateData = $this->getExchangeRate($to);
+            $rateData['Exrate'] = round($rateData['Exrate'],3);
         } else {
             $fromRate =  $this->getExchangeRate($from);
             $toRate =  $this->getExchangeRate($to);
