@@ -21,17 +21,22 @@ class QuizController extends Controller
 
     public function getExchangeRate(Request $request)
     {
-        $response = collect([]);
-        // TODO: 實作取得匯率
-        $from = $request->from;
-        $to  = $request->to;
-        $rate = $this->exchangeService->getExchangeRate($from,$to);
-        $updatedDate = date('Y-m-d H:i:s');
-        if(!empty($rate)){
-            $response['exchange_rate'] = $rate['Exrate']?:'';
-            $response['updated_at'] = $rate['Exrate']?:$updatedDate;
-        } else {
-            $response['message'] = 'Not search curreny';
+        try{
+            $response = collect([]);
+            // TODO: 實作取得匯率
+            $from = $request->from;
+            $to  = $request->to;
+            if(empty($from) || empty($to)){
+                throw new \Exception('Not search curreny');
+            }
+            $rateData = $this->exchangeService->getExchangeRate($from,$to);
+            if($rateData->isEmpty()){
+                throw new \Exception('Not search curreny');
+            }
+            $response['exchange_rate'] = $rateData['Exrate'];
+            $response['updated_at'] = $rateData['UTC'];
+        }catch(\Exception $e){
+            $response['message'] = $e->getMessage();
         }
         // API回傳結果
         return new ExchangeResource($response);

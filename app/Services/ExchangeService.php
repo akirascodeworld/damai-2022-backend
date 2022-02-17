@@ -19,7 +19,7 @@ class ExchangeService
 
     public function getExchangeRate(string $from, string $to, $amount = 1)
     {
-        $rate = $this->currencyRepo->getExchangeRate($from, $to);
+        $rate = $this->currencyRepo->getAllCurrencyRate($from, $to);
         return $rate;
     }
 }
